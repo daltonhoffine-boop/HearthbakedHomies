@@ -1,0 +1,8 @@
+name = "hearthbaked-rsvp"
+main = "worker.js"
+compatibility_date = "2026-10-01"
+
+[[kv_namespaces]]
+binding = "RSVPS"
+id = "29d706e805fa43f19653099d190f5850"
+

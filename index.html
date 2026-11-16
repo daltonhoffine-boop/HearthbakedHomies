@@ -57,8 +57,17 @@
   .slot .names { color:var(--mute); font-size:.7rem; word-break:break-word; }
   .role { display:block; width:100%; text-align:left; margin-top:.2rem; padding:.15rem .35rem; font-size:.72rem; color:var(--txt); border-color:var(--line); }
   .role span { color:var(--gold); }
-  .role.on { background:rgba(111,207,111,.22); border-color:#6fcf6f; color:#d8f5d0; }
-  .role:hover { border-color:#7fc45a; }
+  .clsbtn { padding:.4rem .7rem; border-radius:4px; border:1px solid var(--line); background:#150f0b; color:var(--txt); cursor:pointer; font-weight:bold; }
+  .msg { margin:.6rem 0; padding:.5rem .8rem; border-radius:6px; background:rgba(142,27,20,.6); border:1px solid #c0392b; }
+  dialog { background:#2a1c14; color:var(--txt); border:2px solid #d9a441; border-radius:12px; padding:1rem 1.2rem; }
+  dialog::backdrop { background:rgba(0,0,0,.65); }
+  dialog h3 { margin:0 0 .7rem; color:var(--gold); }
+  .clslist { display:grid; grid-template-columns:repeat(3,1fr); gap:.5rem; }
+  .clslist button { padding:.6rem .8rem; border-radius:6px; border:1px solid currentColor; background:#150f0b; font-weight:bold; cursor:pointer; font-size:.95rem; }
+  .clslist button:hover { background:#2a1c14; box-shadow:0 0 10px currentColor; }
+  dialog .cancel { margin-top:.8rem; }
+  .role .nm { font-weight:bold; text-shadow:0 1px 1px #000; }
+  .role.on { background:rgba(255,255,255,.08); border-color:currentColor; box-shadow:0 0 0 1px currentColor inset; }  .role:hover { border-color:#7fc45a; }
   .garland { display:flex; align-items:center; gap:.9rem; margin:.5rem auto 1rem; max-width:980px; }
   .garland::before, .garland::after { content:""; flex:1; height:7px;
     background:
@@ -93,10 +102,13 @@
 
 <div class="bar">
   <label>Your character: <input id="who" placeholder="Character name" maxlength="24"></label>
+  <button id="clsBtn" type="button" class="clsbtn">Pick class</button>
   <span class="sub" style="margin:0">Each run needs 1 tank, 1 healer and 3 damage. Click an open slot to sign up (one role per run); click your own name to cancel.</span>
 </div>
 
+<div id="msg" class="msg" hidden></div>
 <div id="cal"></div>
+<dialog id="clsDlg"><form method="dialog"><h3>Choose your class</h3><div id="clsList" class="clslist"></div><button class="cancel" value="x">Cancel</button></form></dialog>
 
 <h2>Dungeon quest guide (WoWHead)</h2>
 <table>
@@ -120,7 +132,7 @@
     <a href="https://foreverdb.net/events/feast-of-winter-veil" target="_blank" rel="noopener">ForeverDB</a></li>
   <li>📅 <a href="https://www.wowhead.com/events/holidays" target="_blank" rel="noopener">All holidays &amp; world events (Wowhead)</a></li>
 </ul>
-<p class="sub">RSVPs are saved in this browser only (localStorage), so the (X/5) totals are not yet shared between guildmates.</p>
+<p class="sub">Sign-ups are shared with the whole guild and refresh automatically. There are no passwords, so please only change your own spot.</p>
 
 <script>
 const MAX = 5;
@@ -157,14 +169,47 @@ const EVENTS = [
   { cls:"hol",  label:"🦃 Pilgrim's Bounty",               start:"2026-11-22", end:"2026-11-29", url:"https://www.wowhead.com/guide/world-events/holidays/pilgrims-bounty" },
   { cls:"hol",  label:"🎁 Feast of Winter Veil",           start:"2026-12-15", end:"2027-01-02", url:"https://www.wowhead.com/guide/world-events/holidays/feast-of-winter-veil" },
 ];const MN = ["November","December"], DOW = ["Sun","Mon","Tue","Wed","Thu","Fri","Sat"];
-const KEY = "hbh-rsvp-roles-2026";
+const API = "https://hearthbaked-rsvp.dalton-hoffine.workers.dev/api/rsvps";
 const ROLES = [["tank","🛡 Tank",1],["healer","✚ Healer",1],["dps","⚔ Damage",3]];
-// store[runId] = { tank:[names], healer:[names], dps:[names] }
-let store = JSON.parse(localStorage.getItem(KEY) || "{}");
-const whoEl = document.getElementById("who");
+const CLASSES = {
+  warrior:"#C79C6E", paladin:"#F58CBA", hunter:"#ABD473", rogue:"#FFF569", priest:"#FFFFFF",
+  shaman:"#0070DE", mage:"#69CCF0", warlock:"#9482C9", druid:"#FF7D0A",
+};
+const cname = s => s[0].toUpperCase() + s.slice(1);
+// store[runId] = { tank:[{n,c}], healer:[{n,c}], dps:[{n,c}] } (served by the Cloudflare Worker)
+let store = {};
+const whoEl = document.getElementById("who"), clsBtn = document.getElementById("clsBtn"), msgEl = document.getElementById("msg");
+let myClass = localStorage.getItem("hbh-class") || "";
 whoEl.value = localStorage.getItem("hbh-who") || "";
 // Re-rendering on blur would replace the button mid-click and swallow the click, so only save here.
 whoEl.onchange = () => localStorage.setItem("hbh-who", whoEl.value.trim());
+function showClass() {
+  clsBtn.textContent = myClass ? cname(myClass) : "Pick class";
+  clsBtn.style.color = myClass ? CLASSES[myClass] : "";
+  clsBtn.style.borderColor = myClass ? CLASSES[myClass] : "";
+}
+document.getElementById("clsList").innerHTML = Object.entries(CLASSES)
+  .map(([k, c]) => `<button value="${k}" style="color:${c}">${cname(k)}</button>`).join("");
+const dlg = document.getElementById("clsDlg");
+let afterPick = null;
+function pickClass(cb) { afterPick = cb || null; dlg.showModal(); }
+clsBtn.onclick = () => pickClass();
+document.getElementById("clsList").onclick = e => {
+  const b = e.target.closest("button[value]"); if (!b) return;
+  myClass = b.value; localStorage.setItem("hbh-class", myClass); showClass(); dlg.close();
+  const cb = afterPick; afterPick = null; if (cb) cb();
+};
+showClass();
+function setMsg(t) { msgEl.hidden = !t; msgEl.textContent = t || ""; }
+async function api(opts) {
+  try {
+    const r = await fetch(API, opts), data = await r.json();
+    if (!r.ok) { setMsg(data.error || "Something went wrong"); if (data.store) store = data.store; }
+    else { setMsg(""); store = data; }
+  } catch { setMsg("Can't reach the sign-up server right now. Try again in a moment."); }
+  render();
+}
+const load = () => api();
 const pad = n => String(n).padStart(2,"0");
 const esc = s => s.replace(/[&<>"]/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
 
@@ -174,12 +219,10 @@ function slotHtml(date, i, key, time) {
   const rows = ROLES.map(([k, label, cap]) => {
     const list = r[k] || [];
     return Array.from({ length: cap }, (_, n) => {
-      const name = list[n];
-      const mine = name && name.toLowerCase() === me;
-      return name
-        ? `<button class="role ${mine?"on":""}" data-id="${id}" data-role="${k}" data-slot="${n}" title="${mine?"Click to leave":""}"><span>${label}</span> ${esc(name)}</button>`
-        : `<button class="role" data-id="${id}" data-role="${k}" data-slot="${n}"><span>${label}</span> + open</button>`;
-    }).join("");
+      const e = list[n], mine = e && e.n.toLowerCase() === me;
+      return e
+        ? `<button class="role ${mine?"on":""}" style="color:${CLASSES[e.c] || "#ccc"}" data-id="${id}" data-role="${k}" data-slot="${n}" title="${esc(cname(e.c))}${mine?" – click to leave":""}"><span>${label}</span> <span class="nm" style="color:inherit">${esc(e.n)}</span></button>`
+        : `<button class="role" data-id="${id}" data-role="${k}" data-slot="${n}"><span>${label}</span> + open</button>`;    }).join("");
   }).join("");
   const d = D[key];
   return `<div class="slot" id="s-${id}">
@@ -214,20 +257,16 @@ document.getElementById("cal").addEventListener("click", e => {
   const name = whoEl.value.trim();
   if (!name) { alert("Enter your character name first."); whoEl.focus(); return; }
   localStorage.setItem("hbh-who", name);
-  if (!b.classList.contains("on") && !b.textContent.includes("+ open")) return; // someone else's slot
-  const { id, role } = b.dataset, cap = ROLES.find(r => r[0] === role)[2];
-  const run = store[id] = store[id] || {};
-  const same = n => n.toLowerCase() === name.toLowerCase();
-  const wasHere = (run[role] || []).some(same);
-  // One role per run: clear any existing sign-up, then add to the clicked role unless that was a cancel.
-  ROLES.forEach(([k]) => { run[k] = (run[k] || []).filter(n => !same(n)); });
-  if (!wasHere && (run[role] || []).length < cap) run[role].push(name);
-  localStorage.setItem(KEY, JSON.stringify(store)); render();
-});
-document.getElementById("dg").innerHTML = Object.values(D).map(d =>
+  const mine = b.classList.contains("on");
+  if (!mine && !b.textContent.includes("+ open")) return; // someone else's slot
+  const { id, role } = b.dataset;
+  const send = () => api({ method:"POST", headers:{ "content-type":"application/json" },
+    body: JSON.stringify({ run:id, role, name, cls:myClass, action: mine ? "leave" : "join" }) });
+  if (!mine && !myClass) pickClass(send); else send();
+});document.getElementById("dg").innerHTML = Object.values(D).map(d =>
   `<tr><td>${ICON[d.f]}${d.name}</td><td>${d.lv}</td><td><a href="${d.url}" target="_blank" rel="noopener">Quests on WoWHead</a></td></tr>`).join("");
 document.getElementById("leg").innerHTML = ICON.A + " Alliance-side &nbsp; " + ICON.H + " Horde-side &nbsp; " + ICON.N + " Neutral (both factions)";
-render();
+render(); load(); setInterval(() => { if (!document.hidden) load(); }, 20000);
 </script>
 </body>
 </html>
