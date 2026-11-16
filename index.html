@@ -1,74 +1,232 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <meta name="theme-color" content="#10141d">
-    <title>Dalton Election Desk</title>
-    <style>
-      :root {
-        color-scheme: dark;
-        font-family: Inter, "Segoe UI", Arial, sans-serif;
-        background: #10141d;
-        color: #edf2f8;
-      }
-      * { box-sizing: border-box; }
-      body {
-        min-height: 100vh;
-        margin: 0;
-        display: grid;
-        place-items: center;
-        padding: 24px;
-        background:
-          radial-gradient(ellipse at 18% 16%, #24496a66, transparent 42%),
-          radial-gradient(ellipse at 85% 82%, #8a293c44, transparent 38%),
-          linear-gradient(145deg, #10141d, #171f2b 58%, #111722);
-      }
-      main {
-        width: min(100%, 740px);
-        padding: clamp(28px, 7vw, 64px);
-        border: 1px solid #ffffff24;
-        border-radius: 24px;
-        background: #101722df;
-        box-shadow: 0 28px 90px #0008;
-      }
-      .eyebrow {
-        color: #91cbe0;
-        font-size: 12px;
-        font-weight: 800;
-        letter-spacing: .16em;
-      }
-      h1 { margin: 14px 0; font-size: clamp(36px, 8vw, 62px); line-height: 1.04; }
-      p { color: #c3ceda; line-height: 1.65; }
-      .actions { display: flex; flex-wrap: wrap; gap: 12px; margin-top: 28px; }
-      .actions a {
-        display: inline-flex;
-        min-height: 46px;
-        align-items: center;
-        justify-content: center;
-        padding: 0 18px;
-        border: 1px solid #60748a;
-        border-radius: 9px;
-        color: #eff7fc;
-        font-weight: 750;
-        text-decoration: none;
-      }
-      .actions a:hover { border-color: #a4d8e9; }
-      .actions .primary { border-color: #3984a0; background: #20566b; }
-      .disclosure { margin-top: 28px; color: #99a9ba; font-size: 13px; }
-      a:focus-visible { outline: 3px solid #f4cf72; outline-offset: 3px; }
-    </style>
-  </head>
-  <body>
-    <main>
-      <p class="eyebrow">UNITED STATES · ELECTION NIGHT</p>
-      <h1>Dalton Election Desk</h1>
-      <p>Explore the county-level election-night wall, follow results as they arrive, and see the race-call model in action.</p>
-      <div class="actions">
-        <a class="primary" href="./dashboard/?demo=trickle">Launch the synthetic trickle demo</a>
-        <a href="./dashboard/">Open the dashboard</a>
-      </div>
-      <p class="disclosure">The dashboard opens in live mode and shows results only when a collector feed is connected. The trickle demo is synthetic. This is not a forecast or an official source.</p>
-    </main>
-  </body>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link href="https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@900&family=Cinzel:wght@900&display=swap" rel="stylesheet">
+<title>Hearthbaked Homies — Dungeon Calendar, Nov–Dec 2026</title>
+<style>
+  :root { --bg:#1b1410; --card:rgba(42,28,20,.88); --line:#4a3626; --gold:#f2b84b; --txt:#f3e7d3; --mute:#b39d84; --ok:#6fcf6f; --off:#6a5a4c; }
+  * { box-sizing:border-box; }
+  body { margin:0; font-family:Georgia,serif; color:var(--txt); padding:1rem; min-height:100vh;
+    background:
+      radial-gradient(ellipse 70% 45% at 50% 108%, rgba(255,140,40,.55), rgba(214,84,20,.25) 45%, transparent 75%),
+      radial-gradient(circle at 12% 18%, rgba(255,190,90,.10), transparent 35%),
+      radial-gradient(circle at 88% 12%, rgba(255,170,70,.08), transparent 30%),
+      repeating-linear-gradient(90deg, rgba(0,0,0,.18) 0 2px, transparent 2px 64px),
+      repeating-linear-gradient(90deg, rgba(255,255,255,.015) 0 1px, transparent 1px 11px),
+      linear-gradient(180deg, #1a110c, #2b1a10 60%, #3a2112);
+    background-attachment:fixed; }
+  body::before { content:""; position:fixed; inset:0; pointer-events:none; z-index:0;
+    background:
+      radial-gradient(2px 2px at 10% 90%, #ffb24a, transparent), radial-gradient(2px 2px at 25% 95%, #ff8a2a, transparent),
+      radial-gradient(3px 3px at 42% 92%, #ffc46b, transparent), radial-gradient(2px 2px at 60% 97%, #ff9a3a, transparent),
+      radial-gradient(2px 2px at 75% 93%, #ffb24a, transparent), radial-gradient(3px 3px at 90% 96%, #ff8a2a, transparent);
+    animation:embers 9s linear infinite; opacity:.8; }
+  @keyframes embers { from { transform:translateY(0); opacity:.9; } to { transform:translateY(-70vh); opacity:0; } }
+  @media (prefers-reduced-motion:reduce) { body::before { animation:none; opacity:.4; } }
+  body > * { position:relative; z-index:1; }
+  .day, .bar, table { backdrop-filter:blur(2px); }
+  .plaque { position:relative; max-width:960px; margin:.8rem auto 0; padding:1.1rem 3.2rem 1rem; text-align:center; border-radius:18px 18px 10px 10px;
+    background:radial-gradient(ellipse at 50% 115%,rgba(255,140,40,.35),transparent 65%),repeating-linear-gradient(90deg,rgba(0,0,0,.12) 0 2px,transparent 2px 9px),linear-gradient(180deg,#4a2c18,#2e1a0e);
+    border:2px solid #d9a441; box-shadow:0 0 0 5px #2a170b,0 0 0 7px rgba(217,164,65,.55),0 10px 30px rgba(0,0,0,.55),0 0 40px rgba(255,130,40,.25),inset 0 0 30px rgba(0,0,0,.45); }
+  .plaque::before,.plaque::after { content:"❦"; position:absolute; top:50%; transform:translateY(-50%); font-size:1.8rem; color:#7fc45a; text-shadow:0 0 10px rgba(127,196,90,.5); }
+  .plaque::before { left:.8rem; } .plaque::after { right:.8rem; transform:translateY(-50%) scaleX(-1); }
+  h1 { margin:0; text-align:center; font-family:"Cinzel Decorative","Cinzel",Georgia,serif; font-weight:900; text-transform:uppercase; white-space:nowrap;
+    font-size:clamp(1.2rem,5vw,3.1rem); letter-spacing:.06em; line-height:1.1; color:#ffe9b0;
+    text-shadow:0 2px 0 #7a3b12,0 4px 0 #3a1a08,0 0 18px rgba(255,160,60,.75),0 0 42px rgba(255,120,30,.45); animation:flicker 4s ease-in-out infinite; }
+  .tagline { margin:.45rem 0 0; font-family:"Cinzel",Georgia,serif; font-weight:700; font-size:clamp(.7rem,1.6vw,1rem); letter-spacing:.22em; text-transform:uppercase; color:#e8c56a; text-shadow:0 1px 0 #3a1a08,0 0 10px rgba(255,150,50,.4); }
+  .sub.center { text-align:center; margin-top:1rem; }
+  @keyframes flicker { 0%,100% { text-shadow:0 2px 0 #7a3b12,0 4px 0 #3a1a08,0 0 16px rgba(255,160,60,.65),0 0 36px rgba(255,120,30,.35); } 50% { text-shadow:0 2px 0 #7a3b12,0 4px 0 #3a1a08,0 0 24px rgba(255,180,70,.9),0 0 54px rgba(255,130,40,.6); } }  @media (prefers-reduced-motion:reduce) { h1 { animation:none; } }
+  h2::before { content:"🌿 "; }
+  h2 { color:var(--gold); border-bottom:2px solid #4f8a3c; box-shadow:0 6px 8px -8px #7fc45a; padding-bottom:.3rem; margin-top:2rem; }
+  a { color:#8cc4ff; }
+  .sub { color:var(--mute); margin:0 0 1rem; }
+  .bar { display:flex; gap:.6rem; flex-wrap:wrap; align-items:center; background:var(--card); border:1px solid var(--line); padding:.7rem; border-radius:8px; }
+  input { padding:.4rem; border-radius:4px; border:1px solid var(--line); background:#150f0b; color:var(--txt); }
+  .grid { display:grid; grid-template-columns:repeat(7,1fr); gap:4px; }
+  .dow { text-align:center; color:var(--mute); font-size:.85rem; padding:.2rem; }
+  .day { min-height:7rem; background:var(--card); border:1px solid var(--line); border-radius:6px; padding:.3rem; font-size:.8rem; }
+  .day.blank { background:transparent; border:none; }
+  .day.off { background:rgba(24,16,11,.8); color:var(--off); }
+  .day .n { font-weight:bold; color:var(--mute); }
+  .offtag { color:#d9a066; font-style:italic; }
+  .slot { margin-top:.35rem; padding:.3rem; border:1px solid var(--line); border-radius:5px; background:#33261d; }
+  .slot b { color:var(--gold); }
+  .slot .meta { color:var(--mute); font-size:.72rem; }
+  .slot .names { color:var(--mute); font-size:.7rem; word-break:break-word; }
+  .role { display:block; width:100%; text-align:left; margin-top:.2rem; padding:.15rem .35rem; font-size:.72rem; color:var(--txt); border-color:var(--line); }
+  .role span { color:var(--gold); }
+  .role.on { background:rgba(111,207,111,.22); border-color:#6fcf6f; color:#d8f5d0; }
+  .role:hover { border-color:#7fc45a; }
+  .garland { display:flex; align-items:center; gap:.9rem; margin:.5rem auto 1rem; max-width:980px; }
+  .garland::before, .garland::after { content:""; flex:1; height:7px;
+    background:
+      linear-gradient(90deg, transparent, #e8c56a 30%, #f6dc92 100%) center 1px/100% 1px no-repeat,
+      linear-gradient(90deg, transparent, rgba(232,197,106,.55) 40%, rgba(246,220,146,.8) 100%) center 6px/100% 1px no-repeat; }
+  .garland::after { transform:scaleX(-1); }
+  .garland .orn { color:#e8c56a; font-size:1rem; letter-spacing:.35em; text-shadow:0 0 8px rgba(255,170,60,.6); white-space:nowrap; }
+  .garland .orn i { color:#7fc45a; font-style:normal; text-shadow:0 0 6px rgba(127,196,90,.5); }
+  .fi { width:1.15em; height:1.15em; vertical-align:-.2em; margin-right:.3em; }
+  .ev { display:block; margin-top:.25rem; padding:.1rem .35rem; border-radius:4px; font-size:.7rem; text-decoration:none; color:#fff3d6; }
+  .ev.dmf { background:linear-gradient(90deg,#6a2a7a,#a0446a); }
+  .ev.hol { background:linear-gradient(90deg,#2f6b34,#8a2c26); }
+  .tot { font-size:.8rem; }
+  .links { line-height:1.9; padding-left:1.2rem; }
+  button { cursor:pointer; margin-top:.25rem; padding:.25rem .5rem; border-radius:4px; border:1px solid var(--gold); background:transparent; color:var(--gold); font:inherit; font-size:.78rem; }
+  button.on { background:var(--ok); color:#102010; border-color:var(--ok); }
+  button:disabled { opacity:.45; cursor:not-allowed; }
+  .slot:target, .day:target { outline:2px solid var(--gold); }
+  table { border-collapse:collapse; width:100%; background:var(--card); }
+  td,th { border:1px solid var(--line); padding:.4rem; text-align:left; font-size:.9rem; }
+  @media (max-width:760px) {
+    .grid { grid-template-columns:1fr; }
+    .dow, .day.blank { display:none; }
+    .day { min-height:0; }
+  }
+</style>
+</head>
+<body>
+<header class="plaque"><h1>Hearthbaked Homies</h1><p class="tagline">Fresh-baked loot. Piping-hot pulls. Always room by the fire.</p></header>
+<div class="garland" aria-hidden="true"><span class="orn"><i>❦</i> ◆ <i>❦</i></span></div>
+<p class="sub center">Dungeon Calendar · November &amp; December 2026 · Level 20s dungeon progression starting Tue, Nov 17 · Times are Eastern (ET) · Max 5 players per run</p>
+
+<div class="bar">
+  <label>Your character: <input id="who" placeholder="Character name" maxlength="24"></label>
+  <span class="sub" style="margin:0">Each run needs 1 tank, 1 healer and 3 damage. Click an open slot to sign up (one role per run); click your own name to cancel.</span>
+</div>
+
+<div id="cal"></div>
+
+<h2>Dungeon quest guide (WoWHead)</h2>
+<table>
+  <thead><tr><th>Dungeon</th><th>Levels</th><th>All dungeon quests</th></tr></thead>
+  <tbody id="dg"></tbody>
+</table>
+<p class="sub">Icons: <span id="leg"></span></p>
+<p class="sub">Event banners: 🎪 Darkmoon Faire (alternates Elwynn Forest / Mulgore, open Mon–Sun; tents go up the Friday before) and seasonal holidays. Dates for WoW: Forever per Wowhead; check your in-game calendar for exact realm times.</p>
+<h2>Event links</h2>
+<ul class="links">
+  <li>🎪 <b>Darkmoon Faire</b> —
+    <a href="https://conquestcapped.com/guides/wow-forever/wow-forever-darkmoon-faire/" target="_blank" rel="noopener">Dates, buffs &amp; prizes guide</a> ·
+    <a href="https://www.wowhead.com/forever/zone=12/elwynn-forest" target="_blank" rel="noopener">Elwynn Forest (Nov)</a> ·
+    <a href="https://www.wowhead.com/forever/zone=215/mulgore" target="_blank" rel="noopener">Mulgore (Dec)</a> ·
+    <a href="https://www.wowhead.com/forever/npc=14822/sayge" target="_blank" rel="noopener">Sayge's buffs</a></li>
+  <li>🦃 <b>Pilgrim's Bounty</b> —
+    <a href="https://www.wowhead.com/guide/world-events/holidays/pilgrims-bounty" target="_blank" rel="noopener">Wowhead guide</a> ·
+    <a href="https://warcraft.wiki.gg/wiki/Pilgrim%27s_Bounty" target="_blank" rel="noopener">Warcraft Wiki</a></li>
+  <li>🎁 <b>Feast of Winter Veil</b> —
+    <a href="https://www.wowhead.com/guide/world-events/holidays/feast-of-winter-veil" target="_blank" rel="noopener">Wowhead guide</a> ·
+    <a href="https://foreverdb.net/events/feast-of-winter-veil" target="_blank" rel="noopener">ForeverDB</a></li>
+  <li>📅 <a href="https://www.wowhead.com/events/holidays" target="_blank" rel="noopener">All holidays &amp; world events (Wowhead)</a></li>
+</ul>
+<p class="sub">RSVPs are saved in this browser only (localStorage), so the (X/5) totals are not yet shared between guildmates.</p>
+
+<script>
+const MAX = 5;
+const wh = (id, slug) => `https://www.wowhead.com/classic/zone=${id}/${slug}#quests`;
+const D = {
+  dm:  { f:"A", name:"The Deadmines",       lv:"17–26", url:wh(1581,"the-deadmines") },
+  wc:  { f:"H", name:"Wailing Caverns",     lv:"17–24", url:wh(718,"wailing-caverns") },
+  sfk: { f:"H", name:"Shadowfang Keep",     lv:"22–30", url:wh(209,"shadowfang-keep") },
+  bfd: { f:"N", name:"Blackfathom Deeps",   lv:"20–30", url:wh(719,"blackfathom-deeps") },
+  stk: { f:"A", name:"The Stockade",        lv:"22–30", url:wh(717,"the-stockade") },
+  rfk: { f:"H", name:"Razorfen Kraul",      lv:"25–35", url:wh(491,"razorfen-kraul") },
+  gnm: { f:"A", name:"Gnomeregan",          lv:"24–33", url:wh(133,"gnomeregan") },
+};
+const ICON = {
+  A: `<svg class="fi" viewBox="0 0 24 24" role="img" aria-label="Alliance"><title>Alliance dungeon</title><path d="M12 1.5 21 5v7c0 5-3.8 8.6-9 10.5C6.8 20.6 3 17 3 12V5z" fill="#1f4f9c" stroke="#e8c56a" stroke-width="1.6"/><path d="M12 5.5 8 15h2.4l1.6-4.2 1.6 4.2H16z M7 17h10v1.6H7z" fill="#e8c56a"/></svg>`,
+  H: `<svg class="fi" viewBox="0 0 24 24" role="img" aria-label="Horde"><title>Horde dungeon</title><circle cx="12" cy="12" r="10.5" fill="#8e1b14" stroke="#1b1410" stroke-width="1.5"/><path d="M4 5c3 1 5 4 5 8l3 3 3-3c0-4 2-7 5-8-1 5-2 8-4 10l-4 5-4-5C6 13 5 10 4 5z" fill="#1b1410"/><path d="M9.5 11.5 12 13l2.5-1.5" stroke="#e8c56a" stroke-width="1.4" fill="none"/></svg>`,
+  N: `<svg class="fi" viewBox="0 0 24 24" role="img" aria-label="Neutral"><title>Neutral dungeon (both factions)</title><path d="M12 1.5 22.5 12 12 22.5 1.5 12z" fill="#6b6257" stroke="#e8c56a" stroke-width="1.6"/><circle cx="12" cy="12" r="3.2" fill="#e8c56a"/></svg>`,
+};
+const SUN = ["5:00 PM", "8:30 PM"], TUE = "6:45 PM";
+// date -> array of dungeon keys, or a string for an off day. Progression starts Tue Nov 17.
+const S = {
+  "2026-11-17":["dm"],
+  "2026-11-22":["dm","wc"],   "2026-11-24":["sfk"],
+  "2026-11-29":"Thanksgiving weekend – OFF",
+  "2026-12-01":["bfd"],       "2026-12-06":["sfk","stk"],
+  "2026-12-08":["bfd"],       "2026-12-13":["stk","gnm"],
+  "2026-12-15":["gnm"],       "2026-12-20":["rfk"],
+  "2026-12-22":["rfk"],       "2026-12-27":"Christmas break – OFF",
+};// Inclusive date ranges. Darkmoon Faire alternates Elwynn/Mulgore, open Mon–Sun; holiday dates from Wowhead's event guides.
+const EVENTS = [
+  { cls:"dmf",  label:"🎪 Darkmoon Faire – Elwynn Forest", start:"2026-11-09", end:"2026-11-15", url:"https://www.wowhead.com/forever/zone=12/elwynn-forest" },
+  { cls:"dmf",  label:"🎪 Darkmoon Faire – Mulgore",       start:"2026-12-07", end:"2026-12-13", url:"https://www.wowhead.com/forever/zone=215/mulgore" },
+  { cls:"hol",  label:"🦃 Pilgrim's Bounty",               start:"2026-11-22", end:"2026-11-29", url:"https://www.wowhead.com/guide/world-events/holidays/pilgrims-bounty" },
+  { cls:"hol",  label:"🎁 Feast of Winter Veil",           start:"2026-12-15", end:"2027-01-02", url:"https://www.wowhead.com/guide/world-events/holidays/feast-of-winter-veil" },
+];const MN = ["November","December"], DOW = ["Sun","Mon","Tue","Wed","Thu","Fri","Sat"];
+const KEY = "hbh-rsvp-roles-2026";
+const ROLES = [["tank","🛡 Tank",1],["healer","✚ Healer",1],["dps","⚔ Damage",3]];
+// store[runId] = { tank:[names], healer:[names], dps:[names] }
+let store = JSON.parse(localStorage.getItem(KEY) || "{}");
+const whoEl = document.getElementById("who");
+whoEl.value = localStorage.getItem("hbh-who") || "";
+// Re-rendering on blur would replace the button mid-click and swallow the click, so only save here.
+whoEl.onchange = () => localStorage.setItem("hbh-who", whoEl.value.trim());
+const pad = n => String(n).padStart(2,"0");
+const esc = s => s.replace(/[&<>"]/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+
+function slotHtml(date, i, key, time) {
+  const id = `${date}-${i}`, r = store[id] || {}, me = whoEl.value.trim().toLowerCase();
+  const total = ROLES.reduce((n, [k]) => n + (r[k] || []).length, 0);
+  const rows = ROLES.map(([k, label, cap]) => {
+    const list = r[k] || [];
+    return Array.from({ length: cap }, (_, n) => {
+      const name = list[n];
+      const mine = name && name.toLowerCase() === me;
+      return name
+        ? `<button class="role ${mine?"on":""}" data-id="${id}" data-role="${k}" data-slot="${n}" title="${mine?"Click to leave":""}"><span>${label}</span> ${esc(name)}</button>`
+        : `<button class="role" data-id="${id}" data-role="${k}" data-slot="${n}"><span>${label}</span> + open</button>`;
+    }).join("");
+  }).join("");
+  const d = D[key];
+  return `<div class="slot" id="s-${id}">
+    <b>${time}</b> <b class="tot">(${total}/${MAX})</b><br>
+    ${ICON[d.f]}<a href="${d.url}" target="_blank" rel="noopener">${d.name}</a>
+    <div class="meta">Lv ${d.lv}</div>${rows}</div>`;
+}
+function evHtml(date) {
+  return EVENTS.filter(e => date >= e.start && date <= e.end)
+    .map(e => `<a class="ev ${e.cls}" href="${e.url}" target="_blank" rel="noopener">${e.label}</a>`).join("");
+}
+
+function render() {
+  let h = "";
+  [10,11].forEach((m, mi) => {
+    const first = new Date(2026, m, 1).getDay(), days = new Date(2026, m+1, 0).getDate();
+    h += `<h2>${MN[mi]} 2026</h2><div class="grid">` + DOW.map(d => `<div class="dow">${d}</div>`).join("");
+    for (let i = 0; i < first; i++) h += `<div class="day blank"></div>`;
+    for (let d = 1; d <= days; d++) {
+      const date = `2026-${pad(m+1)}-${pad(d)}`, v = S[date], dow = new Date(2026, m, d).getDay();
+      let body = "", cls = "day";
+      if (typeof v === "string") { cls += " off"; body = `<div class="offtag">🎄 ${v}</div>`; }
+      else if (v) body = v.map((k,i) => slotHtml(date, i, k, dow===0 ? SUN[i] : TUE)).join("");
+      h += `<div class="${cls}" id="d-${date}"><span class="n">${DOW[dow]} ${d}</span>${evHtml(date)}${body}</div>`;
+    }
+    h += `</div>`;
+  });
+  document.getElementById("cal").innerHTML = h;
+}
+document.getElementById("cal").addEventListener("click", e => {
+  const b = e.target.closest("button[data-id]"); if (!b) return;
+  const name = whoEl.value.trim();
+  if (!name) { alert("Enter your character name first."); whoEl.focus(); return; }
+  localStorage.setItem("hbh-who", name);
+  if (!b.classList.contains("on") && !b.textContent.includes("+ open")) return; // someone else's slot
+  const { id, role } = b.dataset, cap = ROLES.find(r => r[0] === role)[2];
+  const run = store[id] = store[id] || {};
+  const same = n => n.toLowerCase() === name.toLowerCase();
+  const wasHere = (run[role] || []).some(same);
+  // One role per run: clear any existing sign-up, then add to the clicked role unless that was a cancel.
+  ROLES.forEach(([k]) => { run[k] = (run[k] || []).filter(n => !same(n)); });
+  if (!wasHere && (run[role] || []).length < cap) run[role].push(name);
+  localStorage.setItem(KEY, JSON.stringify(store)); render();
+});
+document.getElementById("dg").innerHTML = Object.values(D).map(d =>
+  `<tr><td>${ICON[d.f]}${d.name}</td><td>${d.lv}</td><td><a href="${d.url}" target="_blank" rel="noopener">Quests on WoWHead</a></td></tr>`).join("");
+document.getElementById("leg").innerHTML = ICON.A + " Alliance-side &nbsp; " + ICON.H + " Horde-side &nbsp; " + ICON.N + " Neutral (both factions)";
+render();
+</script>
+</body>
 </html>
