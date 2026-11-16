@@ -32,19 +32,31 @@ export function applyAction(store, { run, role, name, cls, action }) {
   return null;
 }
 
-export default {
-  async fetch(request, env) {
-    if (request.method === "OPTIONS") return new Response(null, { status: 204, headers: CORS });
-    const { pathname } = new URL(request.url);
-    if (pathname !== "/api/rsvps") return json({ error: "Not found" }, 404);
-    const store = JSON.parse((await env.RSVPS.get(KEY)) || "{}");
+// A Durable Object serializes every read-modify-write, so simultaneous sign-ups can't overwrite each other.
+export class Rsvps {
+  constructor(state, env) { this.state = state; this.env = env; }
+  async fetch(request) {
+    let store = await this.state.storage.get(KEY);
+    if (!store) {
+      // One-time import of whatever the old KV-based version had saved.
+      store = JSON.parse((await this.env.RSVPS.get(KEY)) || "{}");
+      await this.state.storage.put(KEY, store);
+    }
     if (request.method === "GET") return json(store);
     if (request.method !== "POST") return json({ error: "Method not allowed" }, 405);
     let body;
     try { body = await request.json(); } catch { return json({ error: "Bad JSON" }, 400); }
     const err = applyAction(store, body);
     if (err) return json({ error: err, store }, 409);
-    await env.RSVPS.put(KEY, JSON.stringify(store));
+    await this.state.storage.put(KEY, store);
     return json(store);
+  }
+}
+
+export default {
+  async fetch(request, env) {
+    if (request.method === "OPTIONS") return new Response(null, { status: 204, headers: CORS });
+    if (new URL(request.url).pathname !== "/api/rsvps") return json({ error: "Not found" }, 404);
+    return env.ROOM.get(env.ROOM.idFromName("guild")).fetch(request);
   },
 };
